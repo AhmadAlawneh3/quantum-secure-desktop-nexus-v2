@@ -34,43 +34,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Initialize auth state from local storage
   useEffect(() => {
-    const storedUser = localStorage.getItem('ptng_user');
-    const storedToken = localStorage.getItem('ptng_token');
+  const storedUser = localStorage.getItem('ptng_user');
+  const storedToken = localStorage.getItem('ptng_token');
 
-    console.log('Auth initialization - Token exists:', !!storedToken);
-    
-    if (storedUser && storedToken) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        console.log('Stored user data:', parsedUser);
-        
-        // Ensure the role is properly formatted
-        if (parsedUser && parsedUser.role) {
-          // Normalize role case - ensure first letter is uppercase and rest is lowercase
-          const normalizedRole = parsedUser.role.charAt(0).toUpperCase() + parsedUser.role.slice(1).toLowerCase();
-          parsedUser.role = normalizedRole;
-          console.log('Normalized role:', normalizedRole);
-        }
-        
-        setUser(parsedUser);
-        setToken(storedToken);
-        
-        // Validate token by fetching user profile
-        fetchUserProfile(storedToken).catch((error) => {
-          // If token is invalid, clear storage and state
-          console.error('Token validation failed:', error);
-          clearAuthState();
-        });
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        clearAuthState();
-        setIsLoading(false);
+  console.log('Auth initialization - Token exists:', !!storedToken);
+  
+  if (storedUser && storedToken) {
+    try {
+      const parsedUser = JSON.parse(storedUser);
+      console.log('Stored user data:', parsedUser);
+      
+      // Ensure the role is properly formatted
+      if (parsedUser && parsedUser.role) {
+        // Normalize role case - ensure first letter is uppercase and rest is lowercase
+        const normalizedRole = parsedUser.role.charAt(0).toUpperCase() + parsedUser.role.slice(1).toLowerCase();
+        parsedUser.role = normalizedRole;
+        console.log('Normalized role:', normalizedRole);
       }
-    } else {
-      console.log('No stored user or token found');
+      
+      setUser(parsedUser);
+      setToken(storedToken);
+      
+      // Validate token by fetching user profile
+      fetchUserProfile(storedToken).catch((error) => {
+        // If token is invalid, clear storage and state
+        console.error('Token validation failed:', error);
+        clearAuthState();
+      });
+    } catch (error) {
+      console.error('Error parsing stored user data:', error);
+      clearAuthState();
       setIsLoading(false);
     }
-  }, []);
+  } else {
+    console.log('No stored user or token found');
+    setIsLoading(false);
+  }
+}, []);  // No dependencies here could cause issues - no re-fetching will happen
   
   // Helper to fetch user profile with token
   const fetchUserProfile = async (authToken: string) => {
