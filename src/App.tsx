@@ -29,17 +29,21 @@ import VirtualDesktopPage from "@/pages/admin/VirtualDesktopPage";
 
 // Error page
 import NotFound from "@/pages/NotFound";
+import { ThemeProvider } from 'next-themes';
+
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
+  const App = () => (
+  <ThemeProvider attribute="class" defaultTheme="system">
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
             {/* Auth Routes */}
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
@@ -151,11 +155,12 @@ const App = () => (
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+         </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;
